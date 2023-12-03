@@ -1,0 +1,344 @@
+Server [localhost]:
+Database [postgres]:
+Port [5432]:
+Username [postgres]:
+Пароль пользователя postgres:
+psql (16.1)
+ПРЕДУПРЕЖДЕНИЕ: Кодовая страница консоли (866) отличается от основной
+                страницы Windows (1251).
+                8-битовые (русские) символы могут отображаться некорректно.
+                Подробнее об этом смотрите документацию psql, раздел
+                "Notes for Windows users".
+Введите "help", чтобы получить справку.
+
+postgres=# \! chcp 1251
+Текущая кодовая страница: 1251
+postgres=# CREATE DATABASE yashin_egor
+postgres-# CREATE DATABASE yashin_egor;
+ОШИБКА:  ошибка синтаксиса (примерное положение: "CREATE")
+СТРОКА 2: CREATE DATABASE yashin_egor;
+          ^
+postgres=# CREATE DATABASE yashin_egor;
+CREATE DATABASE
+postgres=# CREATE TABLE Employees (
+postgres(#     EmployeeID INT PRIMARY KEY,
+postgres(#     FullName VARCHAR(100),
+postgres(#     BirthDate DATE,
+postgres(#     StartDate DATE,
+postgres(#     Position VARCHAR(50),
+postgres(#     EmployeeLevel VARCHAR(10),
+postgres(#     Salary DECIMAL(10, 2),
+postgres(#     DepartmentID INT,
+postgres(#     HasRights BOOLEAN
+postgres(# );
+CREATE TABLE
+postgres=# \c yashin_egor;
+Вы подключены к базе данных "yashin_egor" как пользователь "postgres".
+yashin_egor=# CREATE TABLE Employees (
+yashin_egor(#     EmployeeID INT PRIMARY KEY,
+yashin_egor(#     FullName VARCHAR(100),
+yashin_egor(#     BirthDate DATE,
+yashin_egor(#     StartDate DATE,
+yashin_egor(#     Position VARCHAR(50),
+yashin_egor(#     EmployeeLevel VARCHAR(10),
+yashin_egor(#     Salary DECIMAL(10, 2),
+yashin_egor(#     DepartmentID INT,
+yashin_egor(#     HasRights BOOLEAN
+yashin_egor(# );
+CREATE TABLE
+yashin_egor=# CREATE TABLE Departments (
+yashin_egor(#     DepartmentID INT PRIMARY KEY,
+yashin_egor(#     DepartmentName VARCHAR(50),
+yashin_egor(#     HeadFullName VARCHAR(100),
+yashin_egor(#     NumberOfEmployees INT
+yashin_egor(# );
+CREATE TABLE
+yashin_egor=# CREATE TABLE EmployeeRatings (
+yashin_egor(#     EmployeeID INT,
+yashin_egor(#     Quarter INT,
+yashin_egor(#     Rating CHAR(1),
+yashin_egor(#     PRIMARY KEY (EmployeeID, Quarter)
+yashin_egor(# );
+CREATE TABLE
+
+          ^
+yashin_egor=# INSERT INTO Employees VALUES (1, 'Иванов Иван Иванович', '1990-01-15', '2015-03-01', 'Разработчик', 'middle', 60000, 1, TRUE),(2, 'Петров Петр Петрович', '1985-05-20', '2016-01-10', 'Бухгалтер', 'senior', 80000, 2, TRUE),(3, 'Сидорова Анна Владимировна', '1992-11-30', '2018-07-05', 'Тестировщик', 'jun', 50000, 3, TRUE),(4, 'Кузнецова Ольга Сергеевна', '1988-09-12', '2017-09-22', 'Разработчик', 'lead', 90000, 1, FALSE),(5, 'Морозов Дмитрий Алексеевич', '1995-03-08', '2019-02-14', 'Аналитик', 'senior', 75000, 2, TRUE);
+INSERT 0 5
+yashin_egor=# INSERT INTO Departments VALUES (1, 'IT отдел', 'Кузнецова Ольга Сергеевна', 2), (2, 'Бухгалтерский отдел', 'Петров Петр Петрович', 1), (3, 'Тестировочный отдел', 'Сидорова Анна Владимировна', 1);
+INSERT 0 3
+yashin_egor=# INSERT INTO EmployeeRatings VALUES (1, 1, 'A'), (1, 2, 'B'),(1, 3, 'C'),(1, 4, 'D'),(2, 1, 'B'),(2, 2, 'C'),(2, 3,'D'),(2, 4, 'E');
+INSERT 0 8
+yashin_egor=# INSERT INTO Departments VALUES (5, 'Отдел Интеллектуального анализа данных', 'Новый Руководитель', 3);
+INSERT 0 1
+yashin_egor=# INSERT INTO Employees VALUES (6, 'Новый Руководитель', '1980-01-01', '2023-01-01', 'Руководитель отдела', 'lead', 100000, 5, TRUE);
+INSERT 0 1
+yashin_egor=# INSERT INTO Employees VALUES (7, 'Сотрудник 1', '1990-02-02', '2023-01-15', 'Аналитик', 'jun', 55000, 5, TRUE), (8, 'Сотрудник 2', '1995-03-03', '2023-01-20', 'Аналитик', 'jun', 55000, 5, TRUE);
+INSERT 0 2
+
+
+yashin_egor=# SELECT EmployeeID, FullName, AGE(CURRENT_DATE, StartDate) AS WorkExperience FROM Employees;
+ employeeid |          fullname          |     workexperience
+------------+----------------------------+-------------------------
+          1 | Иванов Иван Иванович       | 8 years 9 mons 2 days
+          2 | Петров Петр Петрович       | 7 years 10 mons 24 days
+          3 | Сидорова Анна Владимировна | 5 years 4 mons 29 days
+          4 | Кузнецова Ольга Сергеевна  | 6 years 2 mons 11 days
+          5 | Морозов Дмитрий Алексеевич | 4 years 9 mons 17 days
+          6 | Новый Руководитель         | 11 mons 2 days
+          7 | Сотрудник 1                | 10 mons 19 days
+          8 | Сотрудник 2                | 10 mons 14 days
+(8 строк)
+
+
+yashin_egor=# SELECT EmployeeID, FullName, AGE(CURRENT_DATE, StartDate) AS WorkExperience
+yashin_egor-# FROM Employees
+yashin_egor-# LIMIT 3;
+ employeeid |          fullname          |     workexperience
+------------+----------------------------+-------------------------
+          1 | Иванов Иван Иванович       | 8 years 9 mons 2 days
+          2 | Петров Петр Петрович       | 7 years 10 mons 24 days
+          3 | Сидорова Анна Владимировна | 5 years 4 mons 29 days
+(3 строки)
+
+
+yashin_egor=# SELECT EmployeeID, FullName FROM Employees WHERE Position = 'Водитель';
+ employeeid | fullname
+------------+----------
+(0 строк)
+
+
+yashin_egor=# SELECT EmployeeID, FullName FROM Employees WHERE Position = 'Водитель';
+ employeeid | fullname
+------------+----------
+(0 строк)
+
+
+yashin_egor=# INSERT INTO Employees (EmployeeID, FullName, BirthDate, StartDate, Position, EmployeeLevel, Salary, DepartmentID, HasRights) VALUES (9, 'Сидоров Владимир Алексеевич', '1985-08-20', '2023-01-10', 'Водитель', 'jun', 45000, 4, TRUE);
+INSERT 0 1
+yashin_egor=# SELECT EmployeeID, FullName FROM Employees WHERE Position = 'Водитель';
+ employeeid |          fullname
+------------+-----------------------------
+          9 | Сидоров Владимир Алексеевич
+(1 строка)
+
+
+                                           ^
+yashin_egor=# SELECT DISTINCT EmployeeID FROM EmployeeRatings WHERE Rating IN ('D', 'E');
+ employeeid
+------------
+          1
+          2
+(2 строки)
+
+
+yashin_egor=# SELECT MAX(Salary) AS HighestSalary FROM Employees;
+ highestsalary
+---------------
+     100000.00
+(1 строка)
+
+
+yashin_egor=# SELECT d.DepartmentName FROM Departments d ORDER BY d.EmployeeCount DESC LIMIT 1;
+ОШИБКА:  столбец d.employeecount не существует
+СТРОКА 1: ...LECT d.DepartmentName FROM Departments d ORDER BY d.Employee...
+                                                               ^
+yashin_egor=# SELECT d.DepartmentName FROM Departments d ORDER BY d.EmployeeCount DESC LIMIT 1;
+ОШИБКА:  столбец d.employeecount не существует
+СТРОКА 1: ...LECT d.DepartmentName FROM Departments d ORDER BY d.Employee...
+                                                               ^
+yashin_egor=# SELECT DepartmentName
+yashin_egor-# FROM Departments
+yashin_egor-# WHERE DepartmentID = (
+yashin_egor(#     SELECT DepartmentID
+yashin_egor(#     FROM Employees
+yashin_egor(#     GROUP BY DepartmentID
+yashin_egor(#     ORDER BY COUNT(*) DESC
+yashin_egor(#     LIMIT 1
+yashin_egor(# );
+             departmentname
+----------------------------------------
+ Отдел Интеллектуального анализа данных
+(1 строка)
+
+
+yashin_egor=# SELECT EmployeeID, FullName, AGE(CURRENT_DATE, StartDate) AS WorkExperience
+yashin_egor-# FROM Employees
+yashin_egor-# ORDER BY WorkExperience DESC;
+ employeeid |          fullname           |     workexperience
+------------+-----------------------------+-------------------------
+          1 | Иванов Иван Иванович        | 8 years 9 mons 2 days
+          2 | Петров Петр Петрович        | 7 years 10 mons 24 days
+          4 | Кузнецова Ольга Сергеевна   | 6 years 2 mons 11 days
+          3 | Сидорова Анна Владимировна  | 5 years 4 mons 29 days
+          5 | Морозов Дмитрий Алексеевич  | 4 years 9 mons 17 days
+          6 | Новый Руководитель          | 11 mons 2 days
+          9 | Сидоров Владимир Алексеевич | 10 mons 24 days
+          7 | Сотрудник 1                 | 10 mons 19 days
+          8 | Сотрудник 2                 | 10 mons 14 days
+(9 строк)
+
+
+yashin_egor=# SELECT EmployeeLevel, AVG(Salary) AS AverageSalary
+yashin_egor-# FROM Employees
+yashin_egor-# GROUP BY EmployeeLevel;
+ employeelevel |   averagesalary
+---------------+--------------------
+ jun           | 51250.000000000000
+ lead          | 95000.000000000000
+ senior        | 77500.000000000000
+ middle        | 60000.000000000000
+(4 строки)
+
+
+yashin_egor=# ALTER TABLE Employees
+yashin_egor-# ADD COLUMN BonusCoefficient NUMERIC DEFAULT 1;
+ALTER TABLE
+yashin_egor=#
+yashin_egor=# UPDATE Employees
+yashin_egor-# SET BonusCoefficient =
+yashin_egor-#   CASE
+yashin_egor-#     WHEN EmployeeRatings.Rating IN ('A', 'B') THEN 1.2
+yashin_egor-#     WHEN EmployeeRatings.Rating = 'C' THEN 1
+yashin_egor-#     WHEN EmployeeRatings.Rating = 'D' THEN 0.9
+yashin_egor-#     WHEN EmployeeRatings.Rating = 'E' THEN 0.8
+yashin_egor-#     ELSE 1
+yashin_egor-#   END
+yashin_egor-# FROM EmployeeRatings
+yashin_egor-# WHERE Employees.EmployeeID = EmployeeRatings.EmployeeID;
+UPDATE 2
+yashin_egor=# SELECT FullName
+yashin_egor-# FROM Employees
+yashin_egor-# ORDER BY Salary DESC
+yashin_egor-# LIMIT 1;
+      fullname
+--------------------
+ Новый Руководитель
+(1 строка)
+
+
+yashin_egor=# SELECT FullName
+yashin_egor-# FROM Employees
+yashin_egor-# ORDER BY FullName;
+          fullname
+-----------------------------
+ Иванов Иван Иванович
+ Кузнецова Ольга Сергеевна
+ Морозов Дмитрий Алексеевич
+ Новый Руководитель
+ Петров Петр Петрович
+ Сидоров Владимир Алексеевич
+ Сидорова Анна Владимировна
+ Сотрудник 1
+ Сотрудник 2
+(9 строк)
+
+
+yashin_egor=# SELECT EmployeeLevel, AVG(AGE(CURRENT_DATE, StartDate)) AS AverageExperience
+yashin_egor-# FROM Employees
+yashin_egor-# GROUP BY EmployeeLevel;
+ employeelevel |        averageexperience
+---------------+---------------------------------
+ jun           | 1 year 11 mons 36 days 12:00:00
+ lead          | 3 years 6 mons 21 days 12:00:00
+ senior        | 6 years 3 mons 35 days 12:00:00
+ middle        | 8 years 9 mons 2 days
+(4 строки)
+
+
+yashin_egor=# SELECT e.FullName, d.DepartmentName
+yashin_egor-# FROM Employees e
+yashin_egor-# JOIN Departments d ON e.DepartmentID = d.DepartmentID;
+          fullname          |             departmentname
+----------------------------+----------------------------------------
+ Сидорова Анна Владимировна | Тестировочный отдел
+ Кузнецова Ольга Сергеевна  | IT отдел
+ Морозов Дмитрий Алексеевич | Бухгалтерский отдел
+ Новый Руководитель         | Отдел Интеллектуального анализа данных
+ Сотрудник 1                | Отдел Интеллектуального анализа данных
+ Сотрудник 2                | Отдел Интеллектуального анализа данных
+ Иванов Иван Иванович       | IT отдел
+ Петров Петр Петрович       | Бухгалтерский отдел
+(8 строк)
+
+
+yashin_egor=# SELECT d.DepartmentName, e.FullName, e.Salary
+yashin_egor-# FROM Employees e
+yashin_egor-# JOIN Departments d ON e.DepartmentID = d.DepartmentID
+yashin_egor-# WHERE (e.DepartmentID, e.Salary) IN (
+yashin_egor(#     SELECT DepartmentID, MAX(Salary) AS MaxSalary
+yashin_egor(#     FROM Employees
+yashin_egor(#     GROUP BY DepartmentID
+yashin_egor(# );
+             departmentname             |          fullname          |  salary
+----------------------------------------+----------------------------+-----------
+ Тестировочный отдел                    | Сидорова Анна Владимировна |  50000.00
+ IT отдел                               | Кузнецова Ольга Сергеевна  |  90000.00
+ Отдел Интеллектуального анализа данных | Новый Руководитель         | 100000.00
+ Бухгалтерский отдел                    | Петров Петр Петрович       |  80000.00
+(4 строки)
+
+
+yashin_egor=# SELECT d.DepartmentName
+yashin_egor-# FROM Departments d
+yashin_egor-# JOIN Employees e ON d.DepartmentID = e.DepartmentID
+yashin_egor-# ORDER BY e.Salary * e.BonusCoefficient DESC
+yashin_egor-# LIMIT 1;
+             departmentname
+----------------------------------------
+ Отдел Интеллектуального анализа данных
+(1 строка)
+
+
+yashin_egor=# UPDATE Employees
+yashin_egor-# SET Salary =
+yashin_egor-#   CASE
+yashin_egor-#     WHEN BonusCoefficient > 1.2 THEN Salary * 1.2
+yashin_egor-#     WHEN BonusCoefficient >= 1 AND BonusCoefficient <= 1.2 THEN Salary * 1.1
+yashin_egor-#     ELSE Salary
+yashin_egor-#   END;
+UPDATE 9
+yashin_egor=# SELECT
+yashin_egor-#   d.DepartmentName AS "Название отдела",
+yashin_egor-#   e.FullName AS "Фамилия руководителя",
+yashin_egor-#   COUNT(e.EmployeeID) AS "Количество сотрудников",
+yashin_egor-#   AVG(EXTRACT(YEAR FROM AGE(CURRENT_DATE, e.StartDate))) AS "Средний стаж",
+yashin_egor-#   AVG(e.Salary) AS "Средний уровень зарплаты",
+yashin_egor-#   COUNT(CASE WHEN e.EmployeeLevel = 'jun' THEN 1 END) AS "Количество сотрудников уровня junior",
+yashin_egor-#   COUNT(CASE WHEN e.EmployeeLevel = 'mid' THEN 1 END) AS "Количество сотрудников уровня middle",
+yashin_egor-#   COUNT(CASE WHEN e.EmployeeLevel = 'sen' THEN 1 END) AS "Количество сотрудников уровня senior",
+yashin_egor-#   COUNT(CASE WHEN e.EmployeeLevel = 'lea' THEN 1 END) AS "Количество сотрудников уровня lead",
+yashin_egor-#   SUM(e.Salary) AS "Общий размер оплаты труда всех сотрудников до индексации",
+yashin_egor-#   SUM(e.Salary * e.BonusCoefficient) AS "Общий размер оплаты труда всех сотрудников после индексации",
+yashin_egor-#   COUNT(CASE WHEN er.Rating = 'A' THEN 1 END) AS "Общее количество оценок А",
+yashin_egor-#   COUNT(CASE WHEN er.Rating = 'B' THEN 1 END) AS "Общее количество оценок B",
+yashin_egor-#   COUNT(CASE WHEN er.Rating = 'C' THEN 1 END) AS "Общее количество оценок C",
+yashin_egor-#   COUNT(CASE WHEN er.Rating = 'D' THEN 1 END) AS "Общее количество оценок D",
+yashin_egor-#   COUNT(CASE WHEN er.Rating = 'E' THEN 1 END) AS "Общее количество оценок E",
+yashin_egor-#   AVG(e.BonusCoefficient) AS "Средний показатель коэффициента премии",
+yashin_egor-#   SUM(e.Salary * (e.BonusCoefficient - 1)) AS "Общий размер премии",
+yashin_egor-#   SUM(e.Salary + e.Salary * (e.BonusCoefficient - 1)) AS "Общая сумма зарплат (+ премии) до индексации",
+yashin_egor-#   SUM(e.Salary + e.Salary * (e.BonusCoefficient - 1)) AS "Общая сумма зарплат (+ премии) после индексации",
+yashin_egor-#   (SUM(e.Salary + e.Salary * (e.BonusCoefficient - 1)) - SUM(e.Salary + e.Salary * (e.BonusCoefficient - 1))) /
+yashin_egor-#   SUM(e.Salary + e.Salary * (e.BonusCoefficient - 1)) * 100 AS "Разница в %"
+yashin_egor-# FROM Departments d
+yashin_egor-# JOIN Employees e ON d.DepartmentID = e.DepartmentID
+yashin_egor-# LEFT JOIN EmployeeRatings er ON e.EmployeeID = er.EmployeeID
+yashin_egor-# GROUP BY d.DepartmentName, e.FullName;
+ЗАМЕЧАНИЕ:  идентификатор "Общий размер оплаты труда всех сотрудников до индексации" будет усечён до "Общий размер оплаты труда всех сот"
+ЗАМЕЧАНИЕ:  идентификатор "Общий размер оплаты труда всех сотрудников после индексации" будет усечён до "Общий размер оплаты труда всех сот"
+ЗАМЕЧАНИЕ:  идентификатор "Средний показатель коэффициента премии" будет усечён до "Средний показатель коэффициента п"
+ЗАМЕЧАНИЕ:  идентификатор "Общая сумма зарплат (+ премии) до индексации" будет усечён до "Общая сумма зарплат (+ премии) до ин"
+ЗАМЕЧАНИЕ:  идентификатор "Общая сумма зарплат (+ премии) после индексации" будет усечён до "Общая сумма зарплат (+ премии) посл"
+            Название отдела             |    Фамилия руководителя    | Количество сотрудников |      Средний стаж      | Средний уровень зарплаты | Количество сотрудников уровня junior | Количество сотрудников уровня middle | Количество сотрудников уровня senior | Количество сотрудников уровня lead | Общий размер оплаты труда всех сот | Общий размер оплаты труда всех сот | Общее количество оценок А | Общее количество оценок B | Общее количество оценок C | Общее количество оценок D | Общее количество оценок E | Средний показатель коэффициента п | Общий размер премии | Общая сумма зарплат (+ премии) до ин | Общая сумма зарплат (+ премии) посл |        Разница в %
+----------------------------------------+----------------------------+------------------------+------------------------+--------------------------+--------------------------------------+--------------------------------------+--------------------------------------+------------------------------------+------------------------------------+------------------------------------+---------------------------+---------------------------+---------------------------+---------------------------+---------------------------+-----------------------------------+---------------------+--------------------------------------+-------------------------------------+----------------------------
+ Бухгалтерский отдел                    | Морозов Дмитрий Алексеевич |                      1 |     4.0000000000000000 |       82500.000000000000 |                                    0 |                                    0 |                                    0 |                                  0 |                           82500.00 |                           82500.00 |                         0 |                         0 |                         0 |                         0 |                         0 |            1.00000000000000000000 |                0.00 |                             82500.00 |                            82500.00 | 0.000000000000000000000000
+ Отдел Интеллектуального анализа данных | Новый Руководитель         |                      1 | 0.00000000000000000000 |      110000.000000000000 |                                    0 |                                    0 |                                    0 |                                  0 |                          110000.00 |                          110000.00 |                         0 |                         0 |                         0 |                         0 |                         0 |            1.00000000000000000000 |                0.00 |                            110000.00 |                           110000.00 | 0.000000000000000000000000
+ Бухгалтерский отдел                    | Петров Петр Петрович       |                      4 |     7.0000000000000000 |       88000.000000000000 |                                    0 |                                    0 |                                    0 |                                  0 |                          352000.00 |                         422400.000 |                         0 |                         1 |                         1 |                         1 |                         1 |            1.20000000000000000000 |           70400.000 |                           422400.000 |                          422400.000 | 0.000000000000000000000000
+ Отдел Интеллектуального анализа данных | Сотрудник 1                |                      1 | 0.00000000000000000000 |       60500.000000000000 |                                    1 |                                    0 |                                    0 |                                  0 |                           60500.00 |                           60500.00 |                         0 |                         0 |                         0 |                         0 |                         0 |            1.00000000000000000000 |                0.00 |                             60500.00 |                            60500.00 | 0.000000000000000000000000
+ IT отдел                               | Кузнецова Ольга Сергеевна  |                      1 |     6.0000000000000000 |       99000.000000000000 |                                    0 |                                    0 |                                    0 |                                  0 |                           99000.00 |                           99000.00 |                         0 |                         0 |                         0 |                         0 |                         0 |            1.00000000000000000000 |                0.00 |                             99000.00 |                            99000.00 | 0.000000000000000000000000
+ Тестировочный отдел                    | Сидорова Анна Владимировна |                      1 |     5.0000000000000000 |       55000.000000000000 |                                    1 |                                    0 |                                    0 |                                  0 |                           55000.00 |                           55000.00 |                         0 |                         0 |                         0 |                         0 |                         0 |            1.00000000000000000000 |                0.00 |                             55000.00 |                            55000.00 | 0.000000000000000000000000
+ IT отдел                               | Иванов Иван Иванович       |                      4 |     8.0000000000000000 |       66000.000000000000 |                                    0 |                                    0 |                                    0 |                                  0 |                          264000.00 |                         316800.000 |                         1 |                         1 |                         1 |                         1 |                         0 |            1.20000000000000000000 |           52800.000 |                           316800.000 |                          316800.000 | 0.000000000000000000000000
+ Отдел Интеллектуального анализа данных | Сотрудник 2                |                      1 | 0.00000000000000000000 |       60500.000000000000 |                                    1 |                                    0 |                                    0 |                                  0 |                           60500.00 |                           60500.00 |                         0 |                         0 |                         0 |                         0 |                         0 |            1.00000000000000000000 |                0.00 |                             60500.00 |                            60500.00 | 0.000000000000000000000000
+(8 строк)
+
+-- Далее  --
